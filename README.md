@@ -7,7 +7,7 @@ I'm doing this library for learning purposes.
 ## Roadmap
 
 - [x] mean
-- [ ] mode (almost done, generics is missing)
+- [x] mode
 - [ ] median
 - [ ] variance
 - [ ] standard deviation
