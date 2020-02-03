@@ -124,9 +124,23 @@ pub fn mode<T: Add + Copy + PartialEq + ToString + FromStr>(data: Vec<T>) -> Mod
     }
 }
 
+pub fn median(data: Vec<isize>) -> Option<f64> {
+    let is_odd = data.len() % 2 != 0;
+    if data.len() == 0 {
+        None
+    } else if is_odd {
+        Some(data[data.len() / 2] as f64)
+    } else {
+        let middle1 = data[data.len() / 2 - 1];
+        let middle2 = data[data.len() / 2];
+        let middle_mean = mean(vec![middle1 as f64, middle2 as f64]);
+        Some(middle_mean)
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::{mean, mode, Mode};
+    use crate::{mean, mode, median, Mode};
 
     #[test]
     fn test_mean_positive_integers() {
@@ -247,5 +261,41 @@ mod tests {
     fn test_mode_floats_multimodal() {
         let result = mode(vec![0.3, 1.7, 3.5, 3.5, 1.7, 0.3, 2.6, 2.6]);
         assert_eq!(result, Mode::Multimodal(vec![0.3, 1.7, 2.6, 3.5]));
+    }
+
+    #[test]
+    fn test_median_empty_list() {
+        let result = median(vec![]);
+        assert_eq!(result, None);
+    }
+
+    #[test]
+    fn test_median_odd_length_positive_integers() {
+        let result = median(vec![7, 8, 3, 9, 22]);
+        assert_eq!(result, Some(3.0));
+    }
+
+    #[test]
+    fn test_median_even_length_positive_integers() {
+        let result = median(vec![7, 8, 3, 6, 22, 42]);
+        assert_eq!(result, Some(4.5));
+    }
+
+    #[test]
+    fn test_median_odd_length_negative_integers() {
+        let result = median(vec![-7, -8, -3, -9, -22]);
+        assert_eq!(result, Some(-3.0));
+    }
+
+    #[test]
+    fn test_median_even_length_negative_integers() {
+        let result = median(vec![-7, -8, -3, -6, -22, -42]);
+        assert_eq!(result, Some(-4.5));
+    }
+
+    #[test]
+    fn test_median_even_length_mixed_integers() {
+        let result = median(vec![7, -8, -3, 6, -22, -42]);
+        assert_eq!(result, Some(1.5));
     }
 }
