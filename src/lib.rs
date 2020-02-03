@@ -1,5 +1,10 @@
-pub fn mean(data: Vec<isize>) -> f32 {
-    data.iter().fold(0, |acc, curr| acc + curr) as f32 / data.len() as f32
+use std::ops::Add;
+
+pub fn mean<T: Add<Output = T> + Default + Copy>(data: Vec<T>) -> f64
+where
+    f64: std::convert::From<T>,
+{
+    f64::from(data.iter().fold(T::default(), |acc, curr| acc + *curr)) / data.len() as f64
 }
 
 #[cfg(test)]
@@ -22,5 +27,11 @@ mod tests {
     fn test_mean_mixed_integers() {
         let result = mean(vec![0, -1, 2, -3, 4, -5]);
         assert_eq!(result, -0.5);
+    }
+
+    #[test]
+    fn test_mean_positive_floats() {
+        let result = mean(vec![0.4, 1.2, 2.8, 3.3, 4.9, 5.2]);
+        assert_eq!(result, 2.966666666666667);
     }
 }
