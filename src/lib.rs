@@ -141,6 +141,15 @@ where
     }
 }
 
+pub fn variance(data: Vec<i32>) -> f64 {
+    let list_mean = mean(data.clone());
+    let it = data.iter();
+    let differences = it.map(|v| (f64::from(*v) - list_mean).abs());
+    let powered_differences = differences.map(|d| d * d);
+    let powered_differences: Vec<f64> = powered_differences.collect();
+    mean(powered_differences)
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{mean, median, mode, Mode};
