@@ -4,7 +4,7 @@ Basic statistics utility library for Rust.
 
 I'm doing this library for learning purposes.
 
-## Roadmap
+## Features 
 
 - [x] mean
 - [x] mode
