@@ -124,23 +124,26 @@ pub fn mode<T: Add + Copy + PartialEq + ToString + FromStr>(data: Vec<T>) -> Mod
     }
 }
 
-pub fn median(data: Vec<isize>) -> Option<f64> {
+pub fn median<T: Copy + Default + Add<Output = T>>(data: Vec<T>) -> Option<f64>
+where
+    f64: std::convert::From<T>,
+{
     let is_odd = data.len() % 2 != 0;
     if data.len() == 0 {
         None
     } else if is_odd {
-        Some(data[data.len() / 2] as f64)
+        Some(f64::from(data[data.len() / 2]))
     } else {
         let middle1 = data[data.len() / 2 - 1];
         let middle2 = data[data.len() / 2];
-        let middle_mean = mean(vec![middle1 as f64, middle2 as f64]);
+        let middle_mean = mean(vec![middle1.into(), middle2.into()]);
         Some(middle_mean)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{mean, mode, median, Mode};
+    use crate::{mean, median, mode, Mode};
 
     #[test]
     fn test_mean_positive_integers() {
@@ -265,7 +268,8 @@ mod tests {
 
     #[test]
     fn test_median_empty_list() {
-        let result = median(vec![]);
+        let empty_list: Vec<i32> = vec![];
+        let result = median(empty_list);
         assert_eq!(result, None);
     }
 
