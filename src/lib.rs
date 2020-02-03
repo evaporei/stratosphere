@@ -11,14 +11,14 @@ where
 #[derive(Debug, PartialEq)]
 pub enum Mode {
     None,
-    Unimodal(usize),
-    Bimodal(usize, usize),
-    Trimodal(usize, usize, usize),
-    Multimodal(Vec<usize>),
+    Unimodal(isize),
+    Bimodal(isize, isize),
+    Trimodal(isize, isize, isize),
+    Multimodal(Vec<isize>),
 }
 
-pub fn mode(data: Vec<usize>) -> Mode {
-    let mut values_to_frequency: HashMap<usize, usize> = HashMap::new();
+pub fn mode(data: Vec<isize>) -> Mode {
+    let mut values_to_frequency: HashMap<isize, usize> = HashMap::new();
 
     for value in data {
         let new_frequency = match values_to_frequency.get_mut(&value) {
@@ -171,5 +171,41 @@ mod tests {
     fn test_mode_positive_integers_multimodal() {
         let result = mode(vec![0, 1, 3, 3, 1, 0, 2, 2]);
         assert_eq!(result, Mode::Multimodal(vec![0, 1, 2, 3]));
+    }
+
+    #[test]
+    fn test_mode_negative_integers_none() {
+        let result = mode(vec![0, -1, -2, -3, -4, -5]);
+        assert_eq!(result, Mode::None);
+    }
+
+    #[test]
+    fn test_mode_negative_integers_unimodal() {
+        let result = mode(vec![0, -1, -2, -3, -1]);
+        assert_eq!(result, Mode::Unimodal(-1));
+    }
+
+    #[test]
+    fn test_mode_negative_integers_bimodal() {
+        let result = mode(vec![0, -1, -3, -3, -1]);
+        assert_eq!(result, Mode::Bimodal(-3, -1));
+    }
+
+    #[test]
+    fn test_mode_negative_integers_trimodal() {
+        let result = mode(vec![0, -1, -3, -3, -1, 0]);
+        assert_eq!(result, Mode::Trimodal(-3, -1, 0));
+    }
+
+    #[test]
+    fn test_mode_negative_integers_multimodal() {
+        let result = mode(vec![-0, -1, -3, -3, -1, 0, -2, -2]);
+        assert_eq!(result, Mode::Multimodal(vec![-3, -2, -1, 0]));
+    }
+
+    #[test]
+    fn test_mode_mixed_integers_unimodal() {
+        let result = mode(vec![0, -1, 2, 3, -1]);
+        assert_eq!(result, Mode::Unimodal(-1));
     }
 }
