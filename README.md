@@ -8,7 +8,7 @@ I'm doing this library for learning purposes.
 
 - [x] mean
 - [x] mode
-- [ ] median
+- [x] median
 - [ ] variance
 - [ ] standard deviation
 - [ ] make the code efficient (some parts are really bad still)
