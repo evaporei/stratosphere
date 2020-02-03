@@ -150,6 +150,10 @@ pub fn variance(data: Vec<i32>) -> f64 {
     mean(powered_differences)
 }
 
+pub fn standard_deviation(data: Vec<i32>) -> f64 {
+    variance(data).sqrt()
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{mean, median, mode, Mode};
