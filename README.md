@@ -2,7 +2,7 @@
 
 Basic statistics utility library for Rust.
 
-I'm doing this library for learning purposes.
+I've done this library for learning purposes.
 
 ## Features 
 
