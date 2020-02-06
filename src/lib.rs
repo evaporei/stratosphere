@@ -156,7 +156,7 @@ pub fn standard_deviation(data: Vec<i32>) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use crate::{mean, median, mode, Mode};
+    use crate::{mean, median, mode, variance, Mode};
 
     #[test]
     fn test_mean_positive_integers() {
@@ -314,5 +314,17 @@ mod tests {
     fn test_median_even_length_mixed_integers() {
         let result = median(vec![7, -8, -3, 6, -22, -42]);
         assert_eq!(result, Some(1.5));
+    }
+
+    #[test]
+    fn test_variance_positive_integers() {
+        let result = variance(vec![14, 22, 19, 21, 21]);
+        assert_eq!(result, 8.239999999999998);
+    }
+
+    #[test]
+    fn test_variance_negative_integers() {
+        let result = variance(vec![-22, -21, -20, -18, -15]);
+        assert_eq!(result, 6.159999999999999);
     }
 }
