@@ -10,5 +10,5 @@ I'm doing this library for learning purposes.
 - [x] mode
 - [x] median
 - [x] variance
-- [ ] standard deviation
+- [x] standard deviation
 - [ ] make the code efficient (some parts are really bad still)
