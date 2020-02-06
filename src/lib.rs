@@ -1,11 +1,17 @@
 use std::collections::HashMap;
 use std::ops::Add;
 
-pub fn mean<T: Add<Output = T> + Default + Copy>(data: Vec<T>) -> f64
-where
-    f64: std::convert::From<T>,
-{
-    f64::from(data.iter().fold(T::default(), |acc, curr| acc + *curr)) / data.len() as f64
+pub trait Number: Add<Output = Self> + Default + Copy + Into<f64> {}
+
+macro_rules! number_trait_impl {
+    ($name:ident for $($t:ty)*) => ($(
+        impl $name for $t {}
+    )*)
+}
+number_trait_impl!(Number for u8 u16 u32 i8 i16 i32 f32 f64);
+
+pub fn mean<T: Number>(data: Vec<T>) -> f64 {
+    (data.iter().fold(T::default(), |acc, curr| acc + *curr)).into() / data.len() as f64
 }
 
 #[derive(Debug, PartialEq)]
@@ -20,7 +26,7 @@ pub enum Mode<T> {
 use std::str::FromStr;
 use std::string::ToString;
 
-pub fn mode<T: Add + Copy + PartialEq + ToString + FromStr>(data: Vec<T>) -> Mode<T> {
+pub fn mode<T: Number + ToString + FromStr>(data: Vec<T>) -> Mode<T> {
     let mut values_to_frequency: HashMap<String, usize> = HashMap::new();
 
     for value in data {
@@ -124,15 +130,12 @@ pub fn mode<T: Add + Copy + PartialEq + ToString + FromStr>(data: Vec<T>) -> Mod
     }
 }
 
-pub fn median<T: Copy + Default + Add<Output = T>>(data: Vec<T>) -> Option<f64>
-where
-    f64: std::convert::From<T>,
-{
+pub fn median<T: Number>(data: Vec<T>) -> Option<f64> {
     let is_odd = data.len() % 2 != 0;
     if data.len() == 0 {
         None
     } else if is_odd {
-        Some(f64::from(data[data.len() / 2]))
+        Some((data[data.len() / 2]).into())
     } else {
         let middle1 = data[data.len() / 2 - 1];
         let middle2 = data[data.len() / 2];
@@ -141,17 +144,17 @@ where
     }
 }
 
-pub fn variance(data: Vec<i32>) -> f64 {
+pub fn variance<T: Number>(data: Vec<T>) -> f64 {
     let list_mean = mean(data.clone());
     let it = data.iter();
-    let differences = it.map(|v| (f64::from(*v) - list_mean).abs());
+    let differences = it.map(|v| ((*v).into() - list_mean).abs());
     let powered_differences = differences.map(|d| d * d);
     let powered_differences: Vec<f64> = powered_differences.collect();
     mean(powered_differences)
 }
 
-pub fn standard_deviation(data: Vec<i32>) -> f64 {
-    variance(data).sqrt()
+pub fn standard_deviation<T: Number>(data: Vec<T>) -> f64 {
+    variance(data.iter().map(|a| (*a).into()).collect()).sqrt()
 }
 
 #[cfg(test)]
@@ -190,7 +193,7 @@ mod tests {
 
     #[test]
     fn test_mode_none_with_empty_list() {
-        let empty_list: Vec<usize> = vec![];
+        let empty_list: Vec<i32> = vec![];
         let result = mode(empty_list);
         assert_eq!(result, Mode::None);
     }
@@ -326,5 +329,23 @@ mod tests {
     fn test_variance_negative_integers() {
         let result = variance(vec![-22, -21, -20, -18, -15]);
         assert_eq!(result, 6.159999999999999);
+    }
+
+    #[test]
+    fn test_variance_positive_floats() {
+        let result = variance(vec![7.5, 6.0, 7.0, 6.5, 8.0]);
+        assert_eq!(result, 0.5);
+    }
+
+    #[test]
+    fn test_variance_negative_floats() {
+        let result = variance(vec![-7.5, -5.0, -8.0, -8.3, -6.0]);
+        assert_eq!(result, 1.5864000000000005);
+    }
+
+    #[test]
+    fn test_variance_mixed_floats() {
+        let result = variance(vec![-7.5, 5.0, -8.0, 8.3, -6.0]);
+        assert_eq!(result, 47.33840000000001);
     }
 }
