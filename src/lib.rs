@@ -1,14 +1,8 @@
+mod number;
+
+use number::Number;
+
 use std::collections::HashMap;
-use std::ops::Add;
-
-pub trait Number: Add<Output = Self> + Default + Copy + Into<f64> {}
-
-macro_rules! number_trait_impl {
-    ($name:ident for $($t:ty)*) => ($(
-        impl $name for $t {}
-    )*)
-}
-number_trait_impl!(Number for u8 u16 u32 i8 i16 i32 f32 f64);
 
 pub fn mean<T: Number>(data: &[T]) -> f64 {
     (data.iter().fold(T::default(), |acc, curr| acc + *curr)).into() / data.len() as f64
