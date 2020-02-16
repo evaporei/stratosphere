@@ -1,5 +1,5 @@
 [package]
-name = "statistics"
+name = "stratosphere"
 version = "0.1.0"
 authors = ["Otávio Pace <otaviopp8@gmail.com>"]
 edition = "2018"

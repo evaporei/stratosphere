@@ -1,8 +1,6 @@
-# statistics
+# stratosphere
 
-Basic statistics utility library for Rust.
-
-I've done this library for learning purposes.
+:chart_with_upwards_trend: :earth_africa: A down to earth statistics library.
 
 ## Features 
 
