@@ -1,12 +1,10 @@
+mod mean;
 mod number;
 
+pub use mean::mean;
 use number::Number;
 
 use std::collections::HashMap;
-
-pub fn mean<T: Number>(data: &[T]) -> f64 {
-    (data.iter().fold(T::default(), |acc, curr| acc + *curr)).into() / data.len() as f64
-}
 
 #[derive(Debug, PartialEq)]
 pub enum Mode<T> {
@@ -153,31 +151,7 @@ pub fn standard_deviation<T: Number>(data: &Vec<T>) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use crate::{mean, median, mode, standard_deviation, variance, Mode};
-
-    #[test]
-    fn test_mean_positive_integers() {
-        let result = mean(&[0, 1, 2, 3, 4, 5]);
-        assert_eq!(result, 2.5);
-    }
-
-    #[test]
-    fn test_mean_negative_integers() {
-        let result = mean(&[0, -1, -2, -3, -4, -5]);
-        assert_eq!(result, -2.5);
-    }
-
-    #[test]
-    fn test_mean_mixed_integers() {
-        let result = mean(&[0, -1, 2, -3, 4, -5]);
-        assert_eq!(result, -0.5);
-    }
-
-    #[test]
-    fn test_mean_positive_floats() {
-        let result = mean(&[0.4, 1.2, 2.8, 3.3, 4.9, 5.2]);
-        assert_eq!(result, 2.966666666666667);
-    }
+    use crate::{median, mode, standard_deviation, variance, Mode};
 
     #[test]
     fn test_mode_positive_integers_none() {
